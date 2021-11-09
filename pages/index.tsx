@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Layout from "../src/components/Layout";
+import Table from "../src/components/Table";
 
 const Home: NextPage = () => {
   return (
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
         varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt.
         Lorem donec massa sapien faucibus et molestie ac.
       </p>
+      <Table></Table>
       </Layout>
     </div>
   );
