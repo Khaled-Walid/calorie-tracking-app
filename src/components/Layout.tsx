@@ -1,4 +1,6 @@
 import * as React from "react";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -111,6 +113,18 @@ export default function Nav(props: Props) {
           <Typography variant="h6" noWrap component="div">
             Calorie Counter
           </Typography>
+          <Box sx={{ position: "absolute", right: "20px" }}>
+            <Link href={"/"}>
+              <Button variant="text" sx={{ color: "white" }}>
+                Login
+              </Button>
+            </Link>
+            <Link href={"/"}>
+              <Button variant="contained" sx={{ backgroundColor: "Orange" }}>
+                Signup
+              </Button>
+            </Link>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
