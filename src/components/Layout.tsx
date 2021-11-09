@@ -4,14 +4,16 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import HomeIcon from "@mui/icons-material/Home";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
+import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import HomeIcon from "@mui/icons-material/Home";
+import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "../Link";
@@ -39,27 +41,45 @@ export default function Nav(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <Link key={text} href={"/"}>
-            <ListItem button>
-              <ListItemIcon>
-                {index % 2 === 0 ? <HomeIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          </Link>
-        ))}
+        <Link href={"/"}>
+          <ListItem button>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Admin Panel" />
+          </ListItem>
+        </Link>
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
+        <Link href={"/"}>
+          <ListItem button>
             <ListItemIcon>
-              {index % 2 === 0 ? <HomeIcon /> : <MailIcon />}
+              <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary="Home" />
           </ListItem>
-        ))}
+        </Link>
+      </List>
+      <List>
+        <Link href={"/"}>
+          <ListItem button>
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+        </Link>
+      </List>
+      <List>
+        <Link href={"/"}>
+          <ListItem button>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
+        </Link>
       </List>
     </div>
   );
