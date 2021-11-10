@@ -29,7 +29,7 @@ model UserAccount {
 model UserPermission {
   id        String         @id @default(cuid())
   accounts  UserAccount[]
-  role      Role
+  role      Role           @unique
 }
 
 enum Role {
