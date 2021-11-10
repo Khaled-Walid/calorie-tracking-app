@@ -18,6 +18,11 @@ import ListLink from "./ListLink";
 
 const drawerWidth = 240;
 
+interface Props {
+  window?: () => Window;
+  children?: any
+}
+
 export default function Nav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -31,13 +36,13 @@ export default function Nav(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-        <ListLink href={"/"} text={"Admin Panel"}>
+        <ListLink href="/admin" text={"Admin Panel"}>
           <AdminPanelSettingsIcon />
         </ListLink>
       </List>
       <Divider />
       <List>
-        <ListLink href={"/"} text={"Home"}>
+        <ListLink href="/" text={"Home"}>
           <HomeIcon />
         </ListLink>
       </List>
