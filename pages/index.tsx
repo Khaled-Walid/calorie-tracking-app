@@ -8,6 +8,7 @@ import DatePicker from "../src/components/DatePicker";
 import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { Box } from "@mui/system";
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
           </Typography>
         </Typography>
         <Typography variant="h6" gutterBottom component="div">
-          Calorie Limit: {" "}
+          Calorie Limit:{" "}
           <Typography
             variant="h6"
             sx={{ display: "inline-block", color: "red" }}
@@ -50,19 +51,24 @@ const Home: NextPage = () => {
           variant="subtitle1"
           gutterBottom
           component="div"
-          sx={{ color: "green" }}
+          sx={{ color: "green", marginBottom: "25px",}}
         >
           You’re still below the calorie limit for today!
         </Typography>
         <DatePicker></DatePicker>
-        <Button
-          variant="contained"
-          sx={{ color: "white", backgroundColor: "blue", marginBottom: "25px" }}
-        >
-          <AddBoxIcon /> &nbsp; Add Food Entry
-        </Button>
-
-        <Table></Table>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              color: "white",
+              backgroundColor: "blue",
+              margin: "25px 0",
+            }}
+          >
+            <AddBoxIcon /> &nbsp; Add Food Entry
+          </Button>
+          <Table></Table>
+        </Box>
       </Layout>
     </div>
   );
