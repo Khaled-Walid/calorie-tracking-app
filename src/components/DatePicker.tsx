@@ -4,9 +4,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 
-export default function ResponsiveDatePickers() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
-
+export default function ResponsiveDatePickers(props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
@@ -14,9 +12,9 @@ export default function ResponsiveDatePickers() {
         label="Enter Date"
         openTo="year"
         views={["year", "month", "day"]}
-        value={value}
+        value={props.value}
         onChange={(newValue) => {
-          setValue(newValue);
+          props.onChange(newValue);
         }}
         renderInput={(params) => <TextField sx={{ width: 300 }} {...params} />}
       />

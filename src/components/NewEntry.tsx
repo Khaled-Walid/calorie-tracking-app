@@ -1,3 +1,4 @@
+import React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Button } from "@mui/material";
@@ -6,11 +7,11 @@ import { Box } from "@mui/system";
 import DatePicker from "./DatePicker";
 import Table from "./Table";
 
-
 export default function NewEntry() {
+  const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <DatePicker></DatePicker>
+      <DatePicker onChange={setDateValue} value={dateValue}></DatePicker>
       <Autocomplete
         disablePortal
         id="combo-box-demo"
