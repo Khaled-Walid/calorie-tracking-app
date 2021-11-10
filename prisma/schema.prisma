@@ -8,13 +8,33 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String        @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  account       UserAccount?
+}
+
+model UserAccount {
+  id              String            @id @default(cuid())
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String
+  password        String
+  permissions     UserPermission[]
+}
+
+model UserPermission {
+  id        String         @id @default(cuid())
+  accounts  UserAccount[]
+  role      Role
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model VerificationRequest {
