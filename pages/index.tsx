@@ -5,7 +5,9 @@ import styles from "../styles/Home.module.css";
 import Layout from "../src/components/Layout";
 import Table from "../src/components/Table";
 import { DatePicker } from "@mui/lab";
-
+import Typography from "@mui/material/Typography";
+import { Button } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
@@ -26,7 +28,40 @@ const Home: NextPage = () => {
           lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
           faucibus et molestie ac.
         </p>
-        <DatePicker></DatePicker>
+        <Typography variant="h6" gutterBottom component="div">
+          Calorie Budget:{" "}
+          <Typography
+            variant="h6"
+            sx={{ display: "inline-block", color: "green" }}
+          >
+            940
+          </Typography>
+        </Typography>
+        <Typography variant="h6" gutterBottom component="div">
+          Calorie Limit: {" "}
+          <Typography
+            variant="h6"
+            sx={{ display: "inline-block", color: "red" }}
+          >
+            2100
+          </Typography>
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          component="div"
+          sx={{ color: "green" }}
+        >
+          You’re still below the calorie limit for today!
+        </Typography>
+        {/* <DatePicker></DatePicker> */}
+        <Button
+          variant="contained"
+          sx={{ color: "white", backgroundColor: "blue", marginBottom: "25px" }}
+        >
+          <AddBoxIcon /> &nbsp; Add Food Entry
+        </Button>
+
         <Table></Table>
       </Layout>
     </div>
