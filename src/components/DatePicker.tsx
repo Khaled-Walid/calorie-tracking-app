@@ -18,7 +18,7 @@ export default function ResponsiveDatePickers() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => <TextField sx={{ width: 300 }} {...params} />}
       />
     </LocalizationProvider>
   );

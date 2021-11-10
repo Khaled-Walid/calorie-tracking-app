@@ -3,14 +3,10 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Layout from "../src/components/Layout";
-import Table from "../src/components/Table";
-import DatePicker from "../src/components/DatePicker";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import NewEntry from "../src/components/NewEntry"
+import NewEntry from "../src/components/NewEntry";
 
 const Home: NextPage = () => {
-  const [isAdding, setIsAdding] = useState(false);
   return (
     <div className={styles.container}>
       <Layout>
@@ -56,9 +52,7 @@ const Home: NextPage = () => {
         >
           You’re still below the calorie limit for today!
         </Typography>
-        <DatePicker></DatePicker>
-        {!isAdding && <Table></Table>}
-        {isAdding && <NewEntry><NewEntry>}
+        <NewEntry></NewEntry>
       </Layout>
     </div>
   );
