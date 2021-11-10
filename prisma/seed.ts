@@ -31,6 +31,20 @@ const users: Prisma.UserCreateInput[] = [
         },
       },
     },
+    consumedFoods: {
+      create: [
+        {
+          id: 'ckvtg0k6d0016eous7ji1l2px',
+          name: 'banana',
+          calories: 88
+        },
+        {
+          id: 'ckvtu4jmg0016o3uso7qw2j29',
+          name: 'eggs',
+          calories: 135,
+        },
+      ],
+    },
   },
   {
     id: 'ckvtcy4e80029jqus9m2xy61t',
