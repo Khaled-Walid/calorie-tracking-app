@@ -7,18 +7,15 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import HomeIcon from "@mui/icons-material/Home";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
+import SendIcon from "@mui/icons-material/Send";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "../Link";
+import ListLink from "./ListLink";
 
 const drawerWidth = 240;
 
@@ -43,45 +40,20 @@ export default function Nav(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-        <Link href={"/"}>
-          <ListItem button>
-            <ListItemIcon>
-              <AdminPanelSettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Admin Panel" />
-          </ListItem>
-        </Link>
+        <ListLink href={"/"} text={"Admin Panel"}>
+          <AdminPanelSettingsIcon />
+        </ListLink>
       </List>
       <Divider />
       <List>
-        <Link href={"/"}>
-          <ListItem button>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-        </Link>
+        <ListLink href={"/"} text={"Home"}>
+          <HomeIcon />
+        </ListLink>
       </List>
       <List>
-        <Link href={"/"}>
-          <ListItem button>
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-        </Link>
-      </List>
-      <List>
-        <Link href={"/"}>
-          <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-        </Link>
+        <ListLink href={"/"} text={"Invite a friend"}>
+          <SendIcon />
+        </ListLink>
       </List>
     </div>
   );
