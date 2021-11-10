@@ -12,12 +12,12 @@ async function handleGet(userId: string, _req: NextApiRequestWithSession, res: N
 }
 
 async function handlePost(userId: string, req: NextApiRequestWithSession, res: NextApiResponse) {
-  const { name, calories } = (req.body) as Food;
-  if (!name || !calories) {
+  const { name, calories, consumedAt } = (req.body) as Food;
+  if (!name || !calories || !consumedAt) {
     throw new InputError();
   }
 
-  const newEntry = await createFood({ name, calories }, userId);
+  const newEntry = await createFood({ name, calories, consumedAt }, userId);
 
   res.status(201).json(newEntry);
 }

@@ -18,13 +18,13 @@ async function handleGet(foodId: string, req: NextApiRequestWithSession, res: Ne
 }
 
 async function handlePut(foodId: string, req: NextApiRequestWithSession, res: NextApiResponse) {
-  const { name, calories } = (req.body) as Food;
-  if (!name || !calories) {
+  const { name, calories, consumedAt } = (req.body) as Food;
+  if (!name || !calories || !consumedAt) {
     throw new InputError();
   }
 
   const { session } = req;
-  await updateFood({ id: foodId, name, calories }, session.id);
+  await updateFood({ id: foodId, name, calories, consumedAt }, session.id);
 
   res.status(204);
 }

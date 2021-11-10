@@ -39,6 +39,7 @@ model ConsumedFood {
   userId          String
   name            String
   calories        Float
+  consumedAt      DateTime
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 }

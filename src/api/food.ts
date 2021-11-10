@@ -5,6 +5,7 @@ export type Food = {
   id?: string;
   name: string;
   calories: number;
+  consumedAt: Date | string;
 };
 
 export async function findFood(foodId?: string, userId?: string): Promise<Food[]> {
@@ -14,30 +15,33 @@ export async function findFood(foodId?: string, userId?: string): Promise<Food[]
       userId,
     }
   });
-  return result.map(({ id, name, calories }) => ({
+  return result.map(({ id, name, calories, consumedAt }) => ({
     id,
     name,
-    calories
+    calories,
+    consumedAt,
   }));
 }
 
-export async function createFood({ id, name, calories }: Food, userId: string): Promise<Food> {
+export async function createFood({ id, name, calories, consumedAt }: Food, userId: string): Promise<Food> {
   const result = await prismaClient.consumedFood.create({
     data: {
       id,
       name,
       calories,
       userId,
+      consumedAt: new Date(consumedAt),
     },
   });
   return {
     id: result.id,
     name: result.name,
     calories: result.calories,
+    consumedAt: result.consumedAt,
   };
 }
 
-export async function updateFood({ id, name, calories }: Food, userId?: string): Promise<Food> {
+export async function updateFood({ id, name, calories, consumedAt }: Food, userId?: string): Promise<Food> {
   if (userId) {
     const existing = await prismaClient.consumedFood.findFirst({
       where: {
@@ -47,7 +51,7 @@ export async function updateFood({ id, name, calories }: Food, userId?: string):
     });
     if (!existing) {
       throw new AuthorizationError();
-    }    
+    }
   }
 
   const result = await prismaClient.consumedFood.update({
@@ -57,6 +61,7 @@ export async function updateFood({ id, name, calories }: Food, userId?: string):
     data: {
       name,
       calories,
+      consumedAt: new Date(consumedAt),
     },
   });
 
@@ -64,6 +69,7 @@ export async function updateFood({ id, name, calories }: Food, userId?: string):
     id: result.id,
     name: result.name,
     calories: result.calories,
+    consumedAt: result.consumedAt,
   };
 }
 

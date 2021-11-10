@@ -17,12 +17,12 @@ async function handleGet(foodId: string, _req: NextApiRequestWithSession, res: N
 }
 
 async function handlePut(foodId: string, req: NextApiRequestWithSession, res: NextApiResponse) {
-  const { name, calories } = (req.body) as Food;
-  if (!name || !calories) {
+  const { name, calories, consumedAt } = (req.body) as Food;
+  if (!name || !calories || !consumedAt) {
     throw new InputError();
   }
 
-  await updateFood({ id: foodId, name, calories });
+  await updateFood({ id: foodId, name, calories, consumedAt });
 
   res.status(204);
 }
