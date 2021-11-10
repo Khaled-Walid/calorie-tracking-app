@@ -6,9 +6,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box } from "@mui/system";
 import DatePicker from "./DatePicker";
 import Table from "./Table";
+import { useState } from "react";
 
 export default function NewEntry() {
   const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
+  const [foodName, setFoodName] = useState("");
+  const [calorieCount, setCalorieCount] = useState("");
+  const [newEntry, setNewEntry] = useState([]);
+
+  function handleAddFoodEntry(name, count) {
+    setNewEntry([name, count]);
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <DatePicker onChange={setDateValue} value={dateValue}></DatePicker>
@@ -18,12 +27,20 @@ export default function NewEntry() {
         options={top100Films}
         sx={{ width: 300, margin: "25px 0" }}
         renderInput={(params) => <TextField {...params} label="Food Name" />}
+        onChange={(e) => {
+          setFoodName(e.target.value);
+        }}
+        value={foodName}
       />
       <TextField
         sx={{ width: 300 }}
         id="outlined-basic"
         label="Calorie Count"
         variant="outlined"
+        onChange={(e) => {
+          setCalorieCount(e.target.value);
+        }}
+        value={calorieCount}
       />
       <Button
         variant="contained"
@@ -33,10 +50,13 @@ export default function NewEntry() {
           backgroundColor: "blue",
           margin: "25px 0",
         }}
+        onClick={() => {
+          handleAddFoodEntry(foodName, calorieCount);
+        }}
       >
         <AddBoxIcon /> &nbsp; Add Food Entry
       </Button>
-      <Table></Table>
+      <Table entry={newEntry}></Table>
     </Box>
   );
 }

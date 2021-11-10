@@ -35,18 +35,12 @@ function createData(name: string, calories: number) {
 
 const rows = [
   createData("Frozen yoghurt", 159),
-  createData("Ice cream sandwich", 237),
-  createData("Eclair", 262),
-  createData("Cupcake", 305),
-  createData("Gingerbread", 356),
 ];
 
-export default function CustomizedTables() {
+export default function CustomizedTables(props) {
+  rows.push(createData(props.entry[0], props.entry[1]));
   return (
-    <TableContainer
-      sx={{ minWidth: "65%", maxWidth: 300}}
-      component={Paper}
-    >
+    <TableContainer sx={{ minWidth: "65%", maxWidth: 300 }} component={Paper}>
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
