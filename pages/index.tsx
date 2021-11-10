@@ -6,10 +6,11 @@ import Layout from "../src/components/Layout";
 import Table from "../src/components/Table";
 import DatePicker from "../src/components/DatePicker";
 import Typography from "@mui/material/Typography";
-import { Button } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box } from "@mui/system";
+import { useState } from "react";
+
 const Home: NextPage = () => {
+  const [isAdding, setIsAdding] = useState(false);
   return (
     <div className={styles.container}>
       <Layout>
@@ -51,24 +52,12 @@ const Home: NextPage = () => {
           variant="subtitle1"
           gutterBottom
           component="div"
-          sx={{ color: "green", marginBottom: "25px",}}
+          sx={{ color: "green", marginBottom: "25px" }}
         >
           You’re still below the calorie limit for today!
         </Typography>
         <DatePicker></DatePicker>
-        <Box>
-          <Button
-            variant="contained"
-            sx={{
-              color: "white",
-              backgroundColor: "blue",
-              margin: "25px 0",
-            }}
-          >
-            <AddBoxIcon /> &nbsp; Add Food Entry
-          </Button>
-          <Table></Table>
-        </Box>
+        {!isAdding && <Table></Table>}
       </Layout>
     </div>
   );
