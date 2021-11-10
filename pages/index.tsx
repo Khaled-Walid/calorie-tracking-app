@@ -6,8 +6,8 @@ import Layout from "../src/components/Layout";
 import Table from "../src/components/Table";
 import DatePicker from "../src/components/DatePicker";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
 import { useState } from "react";
+import NewEntry from "../src/components/NewEntry"
 
 const Home: NextPage = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -58,6 +58,7 @@ const Home: NextPage = () => {
         </Typography>
         <DatePicker></DatePicker>
         {!isAdding && <Table></Table>}
+        {isAdding && <NewEntry><NewEntry>}
       </Layout>
     </div>
   );
