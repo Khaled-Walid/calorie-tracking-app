@@ -15,6 +15,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "../Link";
 import ListLink from "./ListLink";
+import { useQuery } from "react-query";
+import { getUserRoles } from "../clientApi/user/roles";
 
 const drawerWidth = 240;
 
@@ -27,6 +29,9 @@ export default function Nav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const { data: roles } = useQuery('userroles', getUserRoles);
+  const isAdmin = roles && roles.some(role => role === 'ADMIN');
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -35,12 +40,16 @@ export default function Nav(props: Props) {
     <div>
       <Toolbar />
       <Divider />
-      <List>
-        <ListLink href="/admin" text={"Admin Panel"}>
-          <AdminPanelSettingsIcon />
-        </ListLink>
-      </List>
-      <Divider />
+      {isAdmin && (
+        <>
+          <List>
+            <ListLink href="/admin" text={"Admin Panel"}>
+              <AdminPanelSettingsIcon />
+            </ListLink>
+          </List>
+          <Divider />
+        </>
+      )}
       <List>
         <ListLink href="/" text={"Home"}>
           <HomeIcon />

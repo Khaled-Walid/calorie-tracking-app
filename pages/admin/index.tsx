@@ -11,6 +11,7 @@ import { getUsers } from "../../src/clientApi/admin/users";
 import { User } from "../../src/api/users";
 import { getFood, deleteFoodById, addFood } from "../../src/clientApi/admin/food";
 import NewEntry from "../../src/components/NewEntry";
+import { withAdminPermission } from "../../src/components/withAdminPermission";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -233,4 +234,4 @@ const Admin: NextPage = () => {
   );
 };
 
-export default Admin;
+export default withAdminPermission(Admin);

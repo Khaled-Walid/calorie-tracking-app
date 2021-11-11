@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFoodById, updateFoodById } from "../../../src/clientApi/admin/food";
 import { useCallback } from "react";
 import { Food } from "../../../src/api/food";
+import { withAdminPermission } from "../../../src/components/withAdminPermission";
 
 const foodMutator = (data: Food) => updateFoodById(data.id || 'zbyelefetezk', data);
 
@@ -53,4 +54,4 @@ const Edit: NextPage = () => {
   );
 };
 
-export default Edit;
+export default withAdminPermission(Edit);
