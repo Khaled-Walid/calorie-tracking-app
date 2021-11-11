@@ -57,11 +57,10 @@ interface TableProps {
   admin?: boolean,
 }
 
-var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 export function createData(name: string, calories: number, date = new Date(), id = '', handleDelete: (() => void) | undefined = undefined): FoodRow {
-  return { id, handleDelete, name, calories, date: `${days[date.getDay()]}, ${months[date.getMonth()]}, ${date.getFullYear()}` };
+  return { id, handleDelete, name, calories, date: `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}` };
 }
 
 export default function CustomizedTables(props: TableProps) {
@@ -82,7 +81,7 @@ export default function CustomizedTables(props: TableProps) {
                 {row.name}
               </StyledTableCell>
               <StyledTableCell align="center">{row.calories}</StyledTableCell>
-              {props.admin? <StyledTableCell align="center">{row.date}</StyledTableCell> : null }
+              <StyledTableCell align="center">{row.date}</StyledTableCell>
               {props.admin? <StyledTableCell align="center"><Controls foodId={row.id} handleDelete={row.handleDelete} /></StyledTableCell> : null }
             </StyledTableRow>
           ))}
