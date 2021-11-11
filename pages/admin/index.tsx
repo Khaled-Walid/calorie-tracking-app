@@ -3,34 +3,18 @@ import styles from "../../styles/Home.module.css";
 import { Autocomplete, TextField } from "@mui/material";
 import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Table, { FoodRow, createData } from '../../src/components/Table';
 import Typography from "@mui/material/Typography";
+import { useQuery } from "react-query";
+import { getUsers } from "../../src/clientApi/admin/users";
+import { User } from "../../src/api/users";
+import { getFood } from "../../src/clientApi/admin/food";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-}
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified?: Date;
-  label?: string,
-  account?: {
-      create: {
-          password: string;
-          permissions: {
-              connect: string;
-          };
-      };
-  };
-}
-
-interface UserFoodData {
-  [key: string]: FoodRow[]
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -79,9 +63,8 @@ const AverageCalories = (props: any) => {
       </Typography>
       <Autocomplete
         disablePortal
-        id="combo-box-demo"
         options={props.mockUsersOptions}
-        onChange={(event: any, newValue: User | null) => {
+        onChange={(_event, newValue) => {
           props.setSelectedUser(newValue);
         }}
         isOptionEqualToValue={(option, value) => {
@@ -100,74 +83,33 @@ const AverageCalories = (props: any) => {
   );
 }
 
-const Admin: NextPage = () => {
-  // create a get all users endpoint
-  const mockUsers: User[] = [
-    {
-      id: "ckvtcy4e30014jqus0gk4koe4",
-      name: "John Doe",
-      email: "john@example.com",
-      emailVerified: new Date(),
-      account: {
-        create: {
-          password: "123",
-          permissions: {
-            connect: "user",
-          },
-        },
-      },
-    },
-    {
-      id: "ckvtcy4e80029jqus9m2xy61t",
-      name: "Jane Doe",
-      email: "admin@example.com",
-      emailVerified: new Date(),
-      account: {
-        create: {
-          password: "123",
-          permissions: {
-            connect: "admin",
-          },
-        },
-      },
-    },
-  ];
+const UserTable = ({userId}: any) => {
+  const fetchDataForUser = useCallback(() => getFood(userId), [userId]);
+  const { isLoading: foodLoading, data: foodData } = useQuery(`admin/foodEntries/${userId}`, fetchDataForUser);
 
-  const mockUsersOptions = mockUsers.map((user: User) => {
+  return foodData ? (
+    <Table 
+      headers={["Food Name", "Calories", "Date", "Controls"]}
+      admin={true}
+      rows={
+        foodData.map(({ name, calories, consumedAt }) => createData(name, calories, new Date(consumedAt)))
+      }
+    />
+  ) : null;
+};
+
+const Admin: NextPage = () => {
+  const { data: users, isLoading: usersLoading } = useQuery('users', getUsers);
+
+  const userOptions = users && users.map(user => {
     return {...user, label: user.name};
   });
 
   const [activeTab, setActivetab] = useState(0);
-  const [selectedUser, setSelectedUser] = useState(mockUsersOptions[0] as User | null);
-  const [foodItems, setfoodItems] = useState([] as FoodRow[]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(userOptions ? userOptions[0] : null);
   const [lastSevenDays, setLastSevenDays] = useState(0);
   const [weekBefore, setWeekBefore] = useState(0);
   const [entriesToday, setEntriesToday] = useState(0);
-
-  useEffect(() => {
-    const mockFoodItems: UserFoodData = {
-      "ckvtcy4e80029jqus9m2xy61t": [
-        createData("Frozen yoghurt", 159),
-        createData("Ice cream sandwich", 237),
-        createData("Eclair", 262),
-        createData("Cupcake", 305),
-        createData("Gingerbread", 356),
-      ],
-      "ckvtcy4e30014jqus0gk4koe4": [
-        createData("item 1", 520),
-        createData("item 2", 521),
-        createData("item 3", 522),
-        createData("item 4", 523),
-        createData("item 5", 524),
-      ]
-    };
-
-    if (selectedUser?.id) {
-      setfoodItems(mockFoodItems[selectedUser.id]);
-    } else {
-      setfoodItems([]);
-    }
-  }, [selectedUser]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActivetab(newValue);
@@ -187,28 +129,25 @@ const Admin: NextPage = () => {
           </Tabs>
         </Box>
         <TabPanel value={activeTab} index={0}>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={mockUsersOptions}
-            onChange={(event: any, newValue: User | null) => {
-              setSelectedUser(newValue);
-            }}
-            isOptionEqualToValue={(option, value) => {
-              return option.id === value.id;
-            }}
-            value={selectedUser}
-            sx={{ width: 300, margin: "25px 0" }}
-            renderInput={(params) => (
-              <TextField {...params} label="User" />
-            )}
-          />
+          {userOptions && (
+            <Autocomplete
+              disablePortal
+              options={userOptions}
+              onChange={(_event, newValue) => {
+                setSelectedUser(newValue);
+              }}
+              isOptionEqualToValue={(option, value) => {
+                return option.id === value.id;
+              }}
+              value={selectedUser}
+              sx={{ width: 300, margin: "25px 0" }}
+              renderInput={(params) => (
+                <TextField {...params} label="User" />
+              )}
+            />
+          )}
 
-          <Table 
-            headers={["Food Name", "Calories", "Date", "Controls"]}
-            admin={true}
-            rows={foodItems}
-          />
+          {selectedUser && <UserTable userId={selectedUser.id} />}
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
           <Typography variant="h6" gutterBottom component="div">
@@ -239,7 +178,7 @@ const Admin: NextPage = () => {
             </Typography>
           </Typography>
           <AverageCalories
-            mockUsersOptions={mockUsersOptions}
+            mockUsersOptions={userOptions}
             setSelectedUser={setSelectedUser}
             selectedUser={selectedUser}
             avgCalories={200}
