@@ -3,11 +3,11 @@ import type { Food } from '../../api/food';
 
 const baseUrl = '/api/admin/food';
 
-export const getFood = (userId: string) => fetchApi<Food[]>(baseUrl + new URLSearchParams({
+export const getFood = (userId: string) => fetchApi<Food[]>(baseUrl + '?' + new URLSearchParams({
   userId,
 }));
 
-export const addFood = (userId: string, food: Food) => fetchApi<Food>(baseUrl + new URLSearchParams({
+export const addFood = (userId: string, food: Food) => fetchApi<Food>(baseUrl + '?' + new URLSearchParams({
   userId,
 }), {
   method: 'POST',
