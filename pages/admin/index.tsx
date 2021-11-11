@@ -4,7 +4,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
 import { useState } from "react";
-import Table from '../../src/components/Table';
+import Table, { FoodRow, createData } from '../../src/components/Table';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -127,7 +127,19 @@ const Admin: NextPage = () => {
             )}
           />
 
-          <Table headers={["Food Name", "Calories", "Date", "Controls"]} admin={true}></Table>
+          <Table 
+            headers={["Food Name", "Calories", "Date", "Controls"]}
+            admin={true}
+            rows={
+              [
+                createData("Frozen yoghurt", 159),
+                createData("Ice cream sandwich", 237),
+                createData("Eclair", 262),
+                createData("Cupcake", 305),
+                createData("Gingerbread", 356),
+              ] as FoodRow[]
+            }
+          />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
           <h1>Item Two</h1>

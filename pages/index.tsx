@@ -4,7 +4,7 @@ import Layout from "../src/components/Layout";
 import Typography from "@mui/material/Typography";
 import NewEntry from "../src/components/NewEntry";
 import { useState } from "react";
-import Table from "../src/components/Table";
+import Table, { FoodRow, createData } from "../src/components/Table";
 
 const Home: NextPage = () => {
   const [calorieBudget, setCalorieBudget] = useState(0);
@@ -52,7 +52,18 @@ const Home: NextPage = () => {
         )}
 
         <NewEntry></NewEntry>
-        <Table headers={["Food Name", "Calories", "Date"]}></Table>
+        <Table
+          headers={["Food Name", "Calories"]}
+          rows={
+            [
+              createData("Frozen yoghurt", 159),
+              createData("Ice cream sandwich", 237),
+              createData("Eclair", 262),
+              createData("Cupcake", 305),
+              createData("Gingerbread", 356),
+            ] as FoodRow[]
+          }
+        />
       </Layout>
     </div>
   );
