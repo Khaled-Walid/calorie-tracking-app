@@ -9,16 +9,19 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addFood, getFood } from "../src/clientApi/user/food";
 
 const Home: NextPage = () => {
-  const [calorieBudget, setCalorieBudget] = useState(0);
   const [calorieLimit, setCalorieLimit] = useState(2100);
   const [dateValue, setDateValue] = useState(new Date());
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(`foodEntries/${dateValue.toDateString()}`, () => getFood(dateValue));
 
+  const calorieBudget = data ? data.reduce((acc, cur) => {
+    return acc + cur.calories;
+  }, 0) : 0;
+
   const addEntryMutation = useMutation(addFood, {
-    onSuccess() {
-      queryClient.invalidateQueries('foodEntries');
+    onSuccess(_, data) {
+      queryClient.invalidateQueries(`foodEntries/${new Date(data.consumedAt).toDateString()}`);
     }
   });
 
