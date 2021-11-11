@@ -4,14 +4,13 @@ import { Autocomplete, TextField } from "@mui/material";
 import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import Table, { FoodRow, createData } from '../../src/components/Table';
+import Table, { createData } from '../../src/components/Table';
 import Typography from "@mui/material/Typography";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getUsers } from "../../src/clientApi/admin/users";
 import { User } from "../../src/api/users";
 import { getFood, deleteFoodById, addFood } from "../../src/clientApi/admin/food";
 import NewEntry from "../../src/components/NewEntry";
-import { Food } from "../../src/api/food";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -101,7 +100,7 @@ const UserTable = ({userId}: any) => {
 
   return foodData ? (
     <Table 
-      headers={["Food Name", "Calories", "Date", "Controls"]}
+      headers={["Food Name", "Calories", "Date/Time", "Controls"]}
       admin={true}
       rows={
         foodData.map(({ id, name, calories, consumedAt }) => (

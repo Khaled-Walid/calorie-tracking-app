@@ -57,10 +57,8 @@ interface TableProps {
   admin?: boolean,
 }
 
-var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
 export function createData(name: string, calories: number, date = new Date(), id = '', handleDelete: (() => void) | undefined = undefined): FoodRow {
-  return { id, handleDelete, name, calories, date: `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}` };
+  return { id, handleDelete, name, calories, date: date.toLocaleString() };
 }
 
 export default function CustomizedTables(props: TableProps) {

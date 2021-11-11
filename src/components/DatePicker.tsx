@@ -2,16 +2,16 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 
-export default function ResponsiveDatePickers(props) {
+export default function ResponsiveDatePickers(props: any) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
+      <DateTimePicker
         disableFuture
-        label="Enter Date"
-        openTo="year"
-        views={["year", "month", "day"]}
+        label="Enter Date/Time"
+        // openTo="year"
+        // views={["year", "month", "day"]}
         value={props.value}
         onChange={(newValue) => {
           props.onChange(newValue);

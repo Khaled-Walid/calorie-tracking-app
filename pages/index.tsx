@@ -75,7 +75,7 @@ const Home: NextPage = () => {
         />
         {data && (
           <Table
-            headers={["Food Name", "Calories", "Date"]}
+            headers={["Food Name", "Calories", "Date/Time"]}
             rows={
               data.map(({ name, calories, consumedAt }) => createData(name, calories, new Date(consumedAt)))
             }
