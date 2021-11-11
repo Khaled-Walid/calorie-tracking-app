@@ -5,6 +5,7 @@ import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import Table, { FoodRow, createData } from '../../src/components/Table';
+import Typography from "@mui/material/Typography";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -56,6 +57,38 @@ function a11yProps(index: number) {
   };
 }
 
+const AverageCalories = (props: any) => {
+  return (
+    <Typography variant="h6" gutterBottom component="div" sx={{maxHeight: "50px"}}>
+      Average Number of Calories for user:{" "}
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        options={props.mockUsersOptions}
+        onChange={(event: any, newValue: User | null) => {
+          props.setSelectedUser(newValue);
+        }}
+        isOptionEqualToValue={(option, value) => {
+          return option.id === value.id;
+        }}
+        value={props.selectedUser}
+        sx={{ width: 300, marginBottom: "20px", display: "inline-block" }}
+        renderInput={(params) => (
+          <TextField {...params} label="User" />
+        )}
+      />{" "}
+      is{" "}
+      <Typography
+        variant="h6"
+        sx={{ display: "inline-block", color: "green" }}
+      >
+        {0}
+      </Typography>{" "}
+      in the last 7 days
+    </Typography>
+  );
+}
+
 const Admin: NextPage = () => {
   // create a get all users endpoint
   const mockUsers: User[] = [
@@ -96,6 +129,9 @@ const Admin: NextPage = () => {
   const [activeTab, setActivetab] = useState(0);
   const [selectedUser, setSelectedUser] = useState(mockUsersOptions[0] as User | null);
   const [foodItems, setfoodItems] = useState([] as FoodRow[]);
+  const [lastSevenDays, setLastSevenDays] = useState(0);
+  const [weekBefore, setWeekBefore] = useState(0);
+  const [entriesToday, setEntriesToday] = useState(0);
 
   useEffect(() => {
     const mockFoodItems: UserFoodData = {
@@ -164,7 +200,38 @@ const Admin: NextPage = () => {
           />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
-          <h1>Item Two</h1>
+          <Typography variant="h6" gutterBottom component="div">
+            Number of Entries in the Last 7 Days:{" "}
+            <Typography
+              variant="h6"
+              sx={{ display: "inline-block", color: "green" }}
+            >
+              {lastSevenDays}
+            </Typography>
+          </Typography>
+          <Typography variant="h6" gutterBottom component="div">
+            Number of Entries in the Last Week Before:{" "}
+            <Typography
+              variant="h6"
+              sx={{ display: "inline-block", color: "green" }}
+            >
+              {weekBefore}
+            </Typography>
+          </Typography>
+          <Typography variant="h6" gutterBottom component="div">
+            Number of Entries Today:{" "}
+            <Typography
+              variant="h6"
+              sx={{ display: "inline-block", color: "green" }}
+            >
+              {entriesToday}
+            </Typography>
+          </Typography>
+          <AverageCalories
+            mockUsersOptions={mockUsersOptions}
+            setSelectedUser={setSelectedUser}
+            selectedUser={selectedUser}
+          />
         </TabPanel>
       </Layout>
     </div>
