@@ -85,17 +85,21 @@ const AverageCalories = (props: any) => {
 }
 
 const UserTable = ({userId}: any) => {
-  const fetchDataForUser = useCallback(() => getFood(userId), [userId]);
-  const { isLoading: foodLoading, data: foodData } = useQuery(`admin/foodEntries/${userId}`, fetchDataForUser);
+  const [dateValue, setDateValue] = useState(new Date());
+  const fetchDataForUser = useCallback(() => getFood(userId, dateValue), [userId, dateValue]);
+  const { isLoading: foodLoading, data: foodData } = useQuery(`admin/foodEntries/${userId}/${dateValue.toDateString()}`, fetchDataForUser);
   const queryClient = useQueryClient();
-  const deleteFoodMutation = useMutation(deleteFoodById, {
-    onSuccess() {
-      queryClient.invalidateQueries(`admin/foodEntries/${userId}`);
+  const deleteFoodMutation = useMutation((data: any) => deleteFoodById(data.foodId), {
+    onSuccess(_, data) {
+      queryClient.invalidateQueries(`admin/foodEntries/${userId}/${data.consumedAt.toDateString()}`);
     }
   })
 
-  const handleDelete = (foodId: string) => {
-    deleteFoodMutation.mutate(foodId);
+  const handleDelete = (foodId: string, consumedAt: Date) => {
+    deleteFoodMutation.mutate({
+      foodId,
+      consumedAt,
+    });
   };
 
   return foodData ? (
@@ -104,9 +108,11 @@ const UserTable = ({userId}: any) => {
       admin={true}
       rows={
         foodData.map(({ id, name, calories, consumedAt }) => (
-          createData(name, calories, new Date(consumedAt), id || '', () => handleDelete(id || ''))
+          createData(name, calories, new Date(consumedAt), id || '', () => handleDelete(id || '', new Date(consumedAt)))
         ))
       }
+      dateValue={dateValue}
+      setDateValue={setDateValue}
     />
   ) : null;
 };
@@ -134,7 +140,7 @@ const Admin: NextPage = () => {
   
   const addEntryMutation = useMutation(addFoodMutator, {
     onSuccess(_, data) {
-      queryClient.invalidateQueries(`admin/foodEntries/${data.userId}`);
+      queryClient.invalidateQueries(`admin/foodEntries/${data.userId}/${data.food.consumedAt.toDateString()}`);
     }
   });
 

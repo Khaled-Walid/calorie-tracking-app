@@ -10,6 +10,8 @@ import { useState } from "react";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Link from "../Link";
+import DatePicker from "@mui/lab/DatePicker";
+import TextField from "@mui/material/TextField";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,9 +54,11 @@ export interface FoodRow {
   handleDelete?: () => void;
 }
 interface TableProps {
-  rows: FoodRow[],
-  headers: string[],
-  admin?: boolean,
+  rows: FoodRow[];
+  headers: string[];
+  admin?: boolean;
+  dateValue?: Date;
+  setDateValue?: (newValue: Date) => void;
 }
 
 export function createData(name: string, calories: number, date = new Date(), id = '', handleDelete: (() => void) | undefined = undefined): FoodRow {
@@ -63,28 +67,39 @@ export function createData(name: string, calories: number, date = new Date(), id
 
 export default function CustomizedTables(props: TableProps) {
   return (
-    <TableContainer sx={{ minWidth: "65%", maxWidth: 300 }} component={Paper}>
-      <Table aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            {props.headers.map((name, index) => (
-              <StyledTableCell key={index} align="center">{ name }</StyledTableCell>
+    <>
+      { props.dateValue && props.setDateValue && (
+        <DatePicker
+          disableFuture
+          label="Filter By Date"
+          value={props.dateValue}
+          onChange={props.setDateValue as any}
+          renderInput={(params) => <TextField sx={{ width: 300 }} {...params} />}
+        />
+      )}
+      <TableContainer sx={{ minWidth: "65%", maxWidth: 300, margin: "25px 0" }} component={Paper}>
+        <Table aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              {props.headers.map((name, index) => (
+                <StyledTableCell key={index} align="center">{ name }</StyledTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.rows.map((row) => (
+              <StyledTableRow key={row.name}>
+                <StyledTableCell align="center" component="th" scope="row">
+                  {row.name}
+                </StyledTableCell>
+                <StyledTableCell align="center">{row.calories}</StyledTableCell>
+                <StyledTableCell align="center">{row.date}</StyledTableCell>
+                {props.admin? <StyledTableCell align="center"><Controls foodId={row.id} handleDelete={row.handleDelete} /></StyledTableCell> : null }
+              </StyledTableRow>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell align="center" component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="center">{row.calories}</StyledTableCell>
-              <StyledTableCell align="center">{row.date}</StyledTableCell>
-              {props.admin? <StyledTableCell align="center"><Controls foodId={row.id} handleDelete={row.handleDelete} /></StyledTableCell> : null }
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

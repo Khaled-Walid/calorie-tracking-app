@@ -7,7 +7,7 @@ export const getFood = (date?: Date) => {
   let search = '';
   if (date) {
     search = '?' + new URLSearchParams({
-      date: date.toISOString(),
+      date: date.toDateString(),
     });
   }
   return fetchApi<Food[]>(baseUrl + search);

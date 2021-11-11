@@ -9,6 +9,8 @@ import createEmotionCache from '../src/createEmotionCache';
 import Cookies from 'cookies';
 import { Provider as SessionProvider } from 'next-auth/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 const sessionTokenCookie = {
   name: 'next-auth.session-token',
@@ -41,16 +43,18 @@ function MyApp(props: MyAppProps) {
     <CacheProvider value={emotionCache}>
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
-          <Head>
-            <title>Calorie Counter</title>
-            <meta name="viewport" content="initial-scale=1, width=device-width" />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Head>
+              <title>Calorie Counter</title>
+              <meta name="viewport" content="initial-scale=1, width=device-width" />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </LocalizationProvider>
         </QueryClientProvider>
       </SessionProvider>
     </CacheProvider>

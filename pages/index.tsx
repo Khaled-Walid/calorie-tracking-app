@@ -11,9 +11,10 @@ import { addFood, getFood } from "../src/clientApi/user/food";
 const Home: NextPage = () => {
   const [calorieBudget, setCalorieBudget] = useState(0);
   const [calorieLimit, setCalorieLimit] = useState(2100);
+  const [dateValue, setDateValue] = useState(new Date());
 
   const queryClient = useQueryClient();
-  const { data, isLoading } = useQuery('foodEntries', getFood);
+  const { data, isLoading } = useQuery(`foodEntries/${dateValue.toDateString()}`, () => getFood(dateValue));
 
   const addEntryMutation = useMutation(addFood, {
     onSuccess() {
@@ -79,6 +80,8 @@ const Home: NextPage = () => {
             rows={
               data.map(({ name, calories, consumedAt }) => createData(name, calories, new Date(consumedAt)))
             }
+            dateValue={dateValue}
+            setDateValue={setDateValue}
           />
         )}
       </Layout>

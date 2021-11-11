@@ -4,11 +4,11 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Button } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box } from "@mui/system";
-import DatePicker from "./DatePicker";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { findFood } from '../clientApi/calories';
 import { FoodCalorie } from "../api/calories";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 
 type NfslType = FoodCalorie & {
   label: string;
@@ -24,7 +24,13 @@ export default function NewEntry(props: any) {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <DatePicker onChange={setDateValue} value={dateValue} />
+      <DateTimePicker
+        disableFuture
+        label="Enter Date/Time"
+        value={dateValue}
+        onChange={setDateValue}
+        renderInput={(params) => <TextField sx={{ width: 300 }} {...params} />}
+      />
       <Autocomplete
         sx={{ width: 300, margin: "25px 0" }}
         freeSolo
