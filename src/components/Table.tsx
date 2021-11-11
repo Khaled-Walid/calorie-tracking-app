@@ -31,9 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Controls = (props: any) => {
-  const [foodId, setFoodId] = useState("1234");
-
+const Controls = ({ foodId, handleDelete }: any) => {
   return (
     <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <Button onClick={() => {}} sx={{ backgroundColor: "Orange" }}>
@@ -41,15 +39,17 @@ const Controls = (props: any) => {
             Edit
           </Link>
         </Button>
-      <Button sx={{ backgroundColor: "Orange" }}>Delete</Button>
+      <Button onClick={handleDelete} sx={{ backgroundColor: "Orange" }}>Delete</Button>
     </ButtonGroup>
   );
 }
 
 export interface FoodRow {
-  name: string,
-  calories: number,
-  date?: string,
+  name: string;
+  calories: number;
+  date?: string;
+  id: string;
+  handleDelete?: () => void;
 }
 interface TableProps {
   rows: FoodRow[],
@@ -60,8 +60,8 @@ interface TableProps {
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-export function createData(name: string, calories: number, date = new Date()) {
-  return { name, calories, date: `${days[date.getDay()]}, ${months[date.getMonth()]}, ${date.getFullYear()}` };
+export function createData(name: string, calories: number, date = new Date(), id = '', handleDelete: (() => void) | undefined = undefined): FoodRow {
+  return { id, handleDelete, name, calories, date: `${days[date.getDay()]}, ${months[date.getMonth()]}, ${date.getFullYear()}` };
 }
 
 export default function CustomizedTables(props: TableProps) {
@@ -83,7 +83,7 @@ export default function CustomizedTables(props: TableProps) {
               </StyledTableCell>
               <StyledTableCell align="center">{row.calories}</StyledTableCell>
               {props.admin? <StyledTableCell align="center">{row.date}</StyledTableCell> : null }
-              {props.admin? <StyledTableCell align="center"><Controls /></StyledTableCell> : null }
+              {props.admin? <StyledTableCell align="center"><Controls foodId={row.id} handleDelete={row.handleDelete} /></StyledTableCell> : null }
             </StyledTableRow>
           ))}
         </TableBody>

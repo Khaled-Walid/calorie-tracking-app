@@ -6,10 +6,10 @@ import { Tabs, Tab, Box } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import Table, { FoodRow, createData } from '../../src/components/Table';
 import Typography from "@mui/material/Typography";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getUsers } from "../../src/clientApi/admin/users";
 import { User } from "../../src/api/users";
-import { getFood } from "../../src/clientApi/admin/food";
+import { getFood, deleteFoodById } from "../../src/clientApi/admin/food";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -86,13 +86,25 @@ const AverageCalories = (props: any) => {
 const UserTable = ({userId}: any) => {
   const fetchDataForUser = useCallback(() => getFood(userId), [userId]);
   const { isLoading: foodLoading, data: foodData } = useQuery(`admin/foodEntries/${userId}`, fetchDataForUser);
+  const queryClient = useQueryClient();
+  const deleteFoodMutation = useMutation(deleteFoodById, {
+    onSuccess() {
+      queryClient.invalidateQueries(`admin/foodEntries/${userId}`);
+    }
+  })
+
+  const handleDelete = (foodId: string) => {
+    deleteFoodMutation.mutate(foodId);
+  };
 
   return foodData ? (
     <Table 
       headers={["Food Name", "Calories", "Date", "Controls"]}
       admin={true}
       rows={
-        foodData.map(({ name, calories, consumedAt }) => createData(name, calories, new Date(consumedAt)))
+        foodData.map(({ id, name, calories, consumedAt }) => (
+          createData(name, calories, new Date(consumedAt), id || '', () => handleDelete(id || ''))
+        ))
       }
     />
   ) : null;

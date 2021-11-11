@@ -26,14 +26,14 @@ async function handlePut(foodId: string, req: NextApiRequestWithSession, res: Ne
   const { session } = req;
   await updateFood({ id: foodId, name, calories, consumedAt }, session.id);
 
-  res.status(204);
+  res.status(204).send('');
 }
 
 async function handleDelete(foodId: string, req: NextApiRequestWithSession, res: NextApiResponse) {
   const { session } = req;
   await deleteFood(foodId, session.id);
 
-  res.status(204);
+  res.status(204).send('');
 }
 
 async function handler(

@@ -8,11 +8,10 @@ import DatePicker from "./DatePicker";
 import { useState } from "react";
 
 export default function NewEntry(props: any) {
-  const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
-  const [foodName, setFoodName] = useState("");
+  const [dateValue, setDateValue] = React.useState<Date | null>(props.dateValue || new Date());
+  const [foodName, setFoodName] = useState(props.foodName || "");
+  const [calorieCount, setCalorieCount] = useState(props.calorieCount || "");
   const [foodOption, setFoodOption] = useState<string | null>(null);
-  const [calorieCount, setCalorieCount] = useState("");
-  const [newEntry, setNewEntry] = useState([]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
