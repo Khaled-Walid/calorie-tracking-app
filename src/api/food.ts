@@ -1,3 +1,4 @@
+import { Prisma } from '.prisma/client';
 import prismaClient from '../../prisma/client';
 import AuthorizationError from '../utils/errors/AuthorizationError';
 
@@ -8,12 +9,22 @@ export type Food = {
   consumedAt: Date | string;
 };
 
-export async function findFood(foodId?: string, userId?: string): Promise<Food[]> {
+export async function findFood(foodId?: string, userId?: string, date?: Date): Promise<Food[]> {
+  let consumedAtFilter: Prisma.DateTimeFilter | undefined = undefined;
+  if (date) {
+    const today = new Date(date.toDateString());
+    consumedAtFilter = {
+      gte: today,
+      lt: new Date(+today + 24 * 60 * 60 * 1000),
+    }
+  }
+
   const result = await prismaClient.consumedFood.findMany({
     where: {
       id: foodId,
       userId,
-    }
+      consumedAt: consumedAtFilter,
+    },
   });
   return result.map(({ id, name, calories, consumedAt }) => ({
     id,

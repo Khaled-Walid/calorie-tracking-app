@@ -5,8 +5,14 @@ import NextApiRequestWithSession from '../../../../src/utils/types/NextApiReques
 import withErrorHandling from '../../../../src/utils/middleware/withErrorHandling';
 import withAdminSession from '../../../../src/utils/middleware/withAdminSession';
 
-async function handleGet(userId: string, _req: NextApiRequestWithSession, res: NextApiResponse<Food[]>) {
-  const foodEntries = await findFood(undefined, userId);
+async function handleGet(userId: string, req: NextApiRequestWithSession, res: NextApiResponse<Food[]>) {
+  const { date: dateString } = req.query;
+  let date: Date | undefined;
+  if (typeof dateString === 'string') {
+    date = new Date(dateString);
+  }
+
+  const foodEntries = await findFood(undefined, userId, date);
 
   res.status(200).json(foodEntries);
 }

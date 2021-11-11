@@ -3,9 +3,15 @@ import type { Food } from '../../api/food';
 
 const baseUrl = '/api/admin/food';
 
-export const getFood = (userId: string) => fetchApi<Food[]>(baseUrl + '?' + new URLSearchParams({
-  userId,
-}));
+export const getFood = (userId: string, date?: Date) => {
+  const params = {
+    userId
+  };
+  if (date) {
+    (params as any).date = date;
+  }
+  return fetchApi<Food[]>(baseUrl + '?' + new URLSearchParams(params));
+}
 
 export const addFood = (userId: string, food: Food) => fetchApi<Food>(baseUrl + '?' + new URLSearchParams({
   userId,

@@ -7,7 +7,14 @@ import withUserSession from '../../../../src/utils/middleware/withUserSession';
 
 async function handleGet(req: NextApiRequestWithSession, res: NextApiResponse<Food[]>) {
   const { session } = req;
-  const foodEntries = await findFood(undefined, session.id);
+
+  const { date: dateString } = req.query;
+  let date: Date | undefined;
+  if (typeof dateString === 'string') {
+    date = new Date(dateString);
+  }
+
+  const foodEntries = await findFood(undefined, session.id, date);
 
   res.status(200).json(foodEntries);
 }
