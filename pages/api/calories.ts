@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { searchFood } from '../../src/api/calories';
+import { FoodCalorie, searchFood } from '../../src/api/calories';
 import InputError from '../../src/utils/errors/InputError';
 import withErrorHandling from '../../src/utils/middleware/withErrorHandling';
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse<FoodCalorie[]>) {
   const { query } = req.query;
   if (typeof query !== 'string') {
     throw new InputError();
