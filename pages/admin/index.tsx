@@ -9,9 +9,10 @@ import Typography from "@mui/material/Typography";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getUsers } from "../../src/clientApi/admin/users";
 import { User } from "../../src/api/users";
-import { getFood, deleteFoodById, addFood } from "../../src/clientApi/admin/food";
+import { getFood, deleteFoodById, addFood, countFoodEntries } from "../../src/clientApi/admin/food";
 import NewEntry from "../../src/components/NewEntry";
 import { withAdminPermission } from "../../src/components/withAdminPermission";
+import { getUserAverageCalories } from "../../src/clientApi/admin/calories";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,19 +45,14 @@ function a11yProps(index: number) {
 }
 
 const AverageCalories = (props: any) => {
-  const [avgCalories, setAvgCalories] = useState(0);
+  const { data: averageCaloriesQuery } = useQuery(`averageCalories/${props.selectedUser.id}`, () => {
+    const today = new Date(new Date().toDateString());
+    const tomorrow = new Date(+today + 24 * 60 * 60 * 1000);
+    const lastWeek = new Date(+tomorrow - 7 * 24 * 60 * 60 * 1000);
+    return getUserAverageCalories(props.selectedUser.id, lastWeek, tomorrow);
+  });
 
-  useEffect(() => {
-    const mockFoodItems: any = {
-      "ckvtcy4e80029jqus9m2xy61t": 200,
-      "ckvtcy4e30014jqus0gk4koe4": 400,
-    }
-    if (props.selectedUser?.id) {
-      setAvgCalories(mockFoodItems[props.selectedUser.id]);
-    } else {
-      setAvgCalories(0);
-    }
-  }, [props.selectedUser]);
+  const avgCalories = averageCaloriesQuery ? Math.round(averageCaloriesQuery * 1000) / 1000 : 0;
 
   return (
     <Box sx={{display: "flex", flexDirection: "row", alignItems: "center", whiteSpace: "pre"}}>
@@ -93,6 +89,9 @@ const UserTable = ({userId}: any) => {
   const deleteFoodMutation = useMutation((data: any) => deleteFoodById(data.foodId), {
     onSuccess(_, data) {
       queryClient.invalidateQueries(`admin/foodEntries/${userId}/${data.consumedAt.toDateString()}`);
+      queryClient.invalidateQueries('lastWeek');
+      queryClient.invalidateQueries('beforeLastWeek');
+      queryClient.invalidateQueries('entriesToday');
     }
   })
 
@@ -127,9 +126,31 @@ const Admin: NextPage = () => {
 
   const [activeTab, setActivetab] = useState(0);
   const [selectedUser, setSelectedUser] = useState<User | null>(userOptions ? userOptions[0] : null);
-  const [lastSevenDays, setLastSevenDays] = useState(0);
-  const [weekBefore, setWeekBefore] = useState(0);
-  const [entriesToday, setEntriesToday] = useState(0);
+
+  const { data: lastWeekQuery } = useQuery('lastWeek', () => {
+    const today = new Date(new Date().toDateString());
+    const tomorrow = new Date(+today + 24 * 60 * 60 * 1000);
+    const lastWeek = new Date(+tomorrow - 7 * 24 * 60 * 60 * 1000);
+    return countFoodEntries(lastWeek, tomorrow);
+  });
+
+  const { data: weekBeforeQuery } = useQuery('beforeLastWeek', () => {
+    const today = new Date(new Date().toDateString());
+    const tomorrow = new Date(+today + 24 * 60 * 60 * 1000);
+    const lastWeek = new Date(+tomorrow - 7 * 24 * 60 * 60 * 1000);
+    const beforeLastWeek = new Date(+tomorrow - 14 * 24 * 60 * 60 * 1000);
+    return countFoodEntries(beforeLastWeek, lastWeek);
+  });
+
+  const { data: entriesTodayQuery } = useQuery('entriesToday', () => {
+    const today = new Date(new Date().toDateString());
+    const tomorrow = new Date(+today + 24 * 60 * 60 * 1000);
+    return countFoodEntries(today, tomorrow);
+  });
+
+  const lastWeek = lastWeekQuery ?? 0;
+  const weekBefore = weekBeforeQuery ?? 0;
+  const entriesToday = entriesTodayQuery ?? 0;
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActivetab(newValue);
@@ -142,6 +163,9 @@ const Admin: NextPage = () => {
   const addEntryMutation = useMutation(addFoodMutator, {
     onSuccess(_, data) {
       queryClient.invalidateQueries(`admin/foodEntries/${data.userId}/${data.food.consumedAt.toDateString()}`);
+      queryClient.invalidateQueries('lastWeek');
+      queryClient.invalidateQueries('beforeLastWeek');
+      queryClient.invalidateQueries('entriesToday');
     }
   });
 
@@ -201,7 +225,7 @@ const Admin: NextPage = () => {
               variant="h6"
               sx={{ display: "inline-block", color: "green" }}
             >
-              {lastSevenDays}
+              {lastWeek}
             </Typography>
           </Typography>
           <Typography variant="h6" gutterBottom component="div">

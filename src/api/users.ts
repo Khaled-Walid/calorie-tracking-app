@@ -50,7 +50,7 @@ export async function getUserRoles(userId: string): Promise<string[]> {
 
 export async function getUserAverageCalories(userId: string, startDate: Date, endDate: Date): Promise<number> {
   const foodAggregate = await prismaClient.consumedFood.aggregate({
-    _avg: {
+    _sum: {
       calories: true,
     },
     where: {
@@ -62,11 +62,13 @@ export async function getUserAverageCalories(userId: string, startDate: Date, en
     }
   });
 
-  if (!foodAggregate || foodAggregate._avg.calories === null) {
+  const numberOfDays = 7;
+
+  if (!foodAggregate || foodAggregate._sum.calories === null) {
     throw new InputError();
   }
 
-  return foodAggregate._avg.calories;
+  return foodAggregate._sum.calories / numberOfDays;
 }
 
 export async function getUserCalorieLimit(userId: string): Promise<number> {
