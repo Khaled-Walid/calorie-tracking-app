@@ -3,13 +3,15 @@ import styles from "../../styles/Home.module.css";
 import { Autocomplete, TextField } from "@mui/material";
 import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Table, { FoodRow, createData } from '../../src/components/Table';
 import Typography from "@mui/material/Typography";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getUsers } from "../../src/clientApi/admin/users";
 import { User } from "../../src/api/users";
-import { getFood, deleteFoodById } from "../../src/clientApi/admin/food";
+import { getFood, deleteFoodById, addFood } from "../../src/clientApi/admin/food";
+import NewEntry from "../../src/components/NewEntry";
+import { Food } from "../../src/api/food";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -127,6 +129,27 @@ const Admin: NextPage = () => {
     setActivetab(newValue);
   };
 
+  const queryClient = useQueryClient();
+
+  const addFoodMutator = (data: any) => addFood(data.userId, data.food);
+  
+  const addEntryMutation = useMutation(addFoodMutator, {
+    onSuccess(_, data) {
+      queryClient.invalidateQueries(`admin/foodEntries/${data.userId}`);
+    }
+  });
+
+  const handleAddFoodEntry = (foodName: string, calorieCount: string, dateValue: Date) => {
+    addEntryMutation.mutate({
+      userId: selectedUser?.id,
+      food: {
+        name: foodName,
+        calories: +calorieCount,
+        consumedAt: dateValue,
+      },
+    });
+  }
+
   return (
     <div className={styles.container}>
       <Layout>
@@ -160,6 +183,10 @@ const Admin: NextPage = () => {
           )}
 
           {selectedUser && <UserTable userId={selectedUser.id} />}
+
+          <NewEntry
+            handleAddFoodEntry={handleAddFoodEntry}
+          />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
           <Typography variant="h6" gutterBottom component="div">
