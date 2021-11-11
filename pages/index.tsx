@@ -5,10 +5,29 @@ import Typography from "@mui/material/Typography";
 import NewEntry from "../src/components/NewEntry";
 import { useState } from "react";
 import Table, { FoodRow, createData } from "../src/components/Table";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { addFood, getFood } from "../src/clientApi/user/food";
 
 const Home: NextPage = () => {
   const [calorieBudget, setCalorieBudget] = useState(0);
   const [calorieLimit, setCalorieLimit] = useState(2100);
+
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery('foodEntries', getFood);
+
+  const addEntryMutation = useMutation(addFood, {
+    onSuccess() {
+      queryClient.invalidateQueries('foodEntries');
+    }
+  });
+
+  const handleAddFoodEntry = (foodName: string, calorieCount: string, dateValue: Date) => {
+    addEntryMutation.mutate({
+      name: foodName,
+      calories: +calorieCount,
+      consumedAt: dateValue,
+    });
+  }
 
   return (
     <div className={styles.container}>
@@ -51,19 +70,17 @@ const Home: NextPage = () => {
           </Typography>
         )}
 
-        <NewEntry></NewEntry>
-        <Table
-          headers={["Food Name", "Calories"]}
-          rows={
-            [
-              createData("Frozen yoghurt", 159),
-              createData("Ice cream sandwich", 237),
-              createData("Eclair", 262),
-              createData("Cupcake", 305),
-              createData("Gingerbread", 356),
-            ] as FoodRow[]
-          }
+        <NewEntry
+          handleAddFoodEntry={handleAddFoodEntry}
         />
+        {data && (
+          <Table
+            headers={["Food Name", "Calories"]}
+            rows={
+              data.map(({ name, calories, consumedAt }) => createData(name, calories, new Date(consumedAt)))
+            }
+          />
+        )}
       </Layout>
     </div>
   );

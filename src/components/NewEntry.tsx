@@ -10,13 +10,10 @@ import { useState } from "react";
 export default function NewEntry(props: any) {
   const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
   const [foodName, setFoodName] = useState("");
-  const [foodOption, setFoodOption] = useState(null);
+  const [foodOption, setFoodOption] = useState<string | null>(null);
   const [calorieCount, setCalorieCount] = useState("");
   const [newEntry, setNewEntry] = useState([]);
 
-  function handleAddFoodEntry(name, count) {
-    setNewEntry([name, count]);
-  }
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <DatePicker onChange={setDateValue} value={dateValue} />
@@ -52,7 +49,7 @@ export default function NewEntry(props: any) {
           margin: "25px 0",
         }}
         onClick={() => {
-          handleAddFoodEntry(foodName, calorieCount);
+          props.handleAddFoodEntry(foodName, calorieCount, dateValue);
         }}
       >
         <AddBoxIcon /> &nbsp; {props.foodId? "Edit" : "Add"} Food Entry
