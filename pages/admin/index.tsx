@@ -58,9 +58,25 @@ function a11yProps(index: number) {
 }
 
 const AverageCalories = (props: any) => {
+  const [avgCalories, setAvgCalories] = useState(0);
+
+  useEffect(() => {
+    const mockFoodItems: any = {
+      "ckvtcy4e80029jqus9m2xy61t": 200,
+      "ckvtcy4e30014jqus0gk4koe4": 400,
+    }
+    if (props.selectedUser?.id) {
+      setAvgCalories(mockFoodItems[props.selectedUser.id]);
+    } else {
+      setAvgCalories(0);
+    }
+  }, [props.selectedUser]);
+
   return (
-    <Typography variant="h6" gutterBottom component="div" sx={{maxHeight: "50px"}}>
-      Average Number of Calories for user:{" "}
+    <Box sx={{display: "flex", flexDirection: "row", alignItems: "center", whiteSpace: "pre"}}>
+      <Typography variant="h6" gutterBottom component="div" sx={{maxHeight: "50px"}}>
+        Average Number of Calories for user:{" "}
+      </Typography>
       <Autocomplete
         disablePortal
         id="combo-box-demo"
@@ -72,20 +88,15 @@ const AverageCalories = (props: any) => {
           return option.id === value.id;
         }}
         value={props.selectedUser}
-        sx={{ width: 300, marginBottom: "20px", display: "inline-block" }}
+        sx={{ width: 300, display: "inline-block" }}
         renderInput={(params) => (
           <TextField {...params} label="User" />
         )}
-      />{" "}
-      is{" "}
-      <Typography
-        variant="h6"
-        sx={{ display: "inline-block", color: "green" }}
-      >
-        {0}
-      </Typography>{" "}
-      in the last 7 days
-    </Typography>
+      />
+      <Typography variant="h6">{" "}is{" "}</Typography>
+      <Typography variant="h6" sx={{ color: "green" }}>{avgCalories}{" "}</Typography>
+      <Typography variant="h6">in the last 7 days</Typography>
+    </Box>
   );
 }
 
@@ -231,6 +242,7 @@ const Admin: NextPage = () => {
             mockUsersOptions={mockUsersOptions}
             setSelectedUser={setSelectedUser}
             selectedUser={selectedUser}
+            avgCalories={200}
           />
         </TabPanel>
       </Layout>
