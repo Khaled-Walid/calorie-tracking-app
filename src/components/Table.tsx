@@ -79,7 +79,7 @@ export default function CustomizedTables(props: TableProps) {
         <TableBody>
           {props.rows.map((row) => (
             <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell align="center" component="th" scope="row">
                 {row.name}
               </StyledTableCell>
               <StyledTableCell align="center">{row.calories}</StyledTableCell>
