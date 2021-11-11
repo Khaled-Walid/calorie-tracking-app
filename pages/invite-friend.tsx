@@ -4,13 +4,34 @@ import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
 import Layout from "../src/components/Layout";
 import styles from "../styles/Home.module.css";
+import { useMutation } from "react-query";
+import { referFriend } from "../src/clientApi/user/refer";
+
+const referFriendMutator = (data: {
+  name: string;
+  email: string;
+}) => referFriend(data.name, data.email);
 
 export default function NewEntry() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  function handleFriendInvitation(name, count) {
-    setNewEntry([name, count]);
+
+  const referFriendMutation = useMutation(referFriendMutator, {
+    onSuccess() {
+      alert('E-mail has been sent!');
+    },
+    onError(err: any) {
+      alert('Failed to send the e-mail\n' + err.toString());
+    }
+  })
+
+  function handleFriendInvitation(name: string, email: string) {
+    referFriendMutation.mutate({
+      name,
+      email,
+    });
   }
+
   return (
     <div className={styles.container}>
       <Layout>

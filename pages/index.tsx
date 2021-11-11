@@ -4,7 +4,7 @@ import Layout from "../src/components/Layout";
 import Typography from "@mui/material/Typography";
 import NewEntry from "../src/components/NewEntry";
 import { useState } from "react";
-import Table, { FoodRow, createData } from "../src/components/Table";
+import Table, { createData } from "../src/components/Table";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addFood, getFood } from "../src/clientApi/user/food";
 
