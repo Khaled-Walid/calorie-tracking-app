@@ -11,30 +11,32 @@ import { useState } from "react";
 export default function NewEntry() {
   const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
   const [foodName, setFoodName] = useState("");
+  const [foodOption, setFoodOption] = useState(null);
   const [calorieCount, setCalorieCount] = useState("");
   const [newEntry, setNewEntry] = useState([]);
 
   function handleAddFoodEntry(name, count) {
     setNewEntry([name, count]);
   }
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <DatePicker onChange={setDateValue} value={dateValue}></DatePicker>
+      <DatePicker onChange={setDateValue} value={dateValue} />
       <Autocomplete
-        disablePortal
-        id="combo-box-demo"
-        options={top100Films}
         sx={{ width: 300, margin: "25px 0" }}
-        renderInput={(params) => <TextField {...params} label="Food Name" />}
-        onChange={(e) => {
-          setFoodName(e.target.value);
+        freeSolo
+        value={foodOption}
+        onChange={(event: any, newValue: string | null) => {
+          setFoodOption(newValue);
         }}
-        value={foodName}
+        inputValue={foodName}
+        onInputChange={(event, newInputValue) => {
+          setFoodName(newInputValue);
+        }}
+        options={top100Films.map((option) => option.label)}
+        renderInput={(params) => <TextField {...params} label="Food Name" />}
       />
       <TextField
         sx={{ width: 300 }}
-        id="outlined-basic"
         label="Calorie Count"
         variant="outlined"
         onChange={(e) => {

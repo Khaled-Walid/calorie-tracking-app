@@ -37,8 +37,9 @@ const rows = [
   createData("Frozen yoghurt", 159),
 ];
 
-export default function CustomizedTables(props) {
-  rows.push(createData(props.entry[0], props.entry[1]));
+export default function CustomizedTables() {
+  
+
   return (
     <TableContainer sx={{ minWidth: "65%", maxWidth: 300 }} component={Paper}>
       <Table aria-label="customized table">
