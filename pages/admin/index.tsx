@@ -45,11 +45,13 @@ function a11yProps(index: number) {
 }
 
 const AverageCalories = (props: any) => {
-  const { data: averageCaloriesQuery } = useQuery(`averageCalories/${props.selectedUser.id}`, () => {
+  const { data: averageCaloriesQuery } = useQuery(`averageCalories/${props.selectedUser?.id}`, () => {
     const today = new Date(new Date().toDateString());
     const tomorrow = new Date(+today + 24 * 60 * 60 * 1000);
     const lastWeek = new Date(+tomorrow - 7 * 24 * 60 * 60 * 1000);
     return getUserAverageCalories(props.selectedUser.id, lastWeek, tomorrow);
+  }, {
+    enabled: !!props.selectedUser,
   });
 
   const avgCalories = averageCaloriesQuery ? Math.round(averageCaloriesQuery * 1000) / 1000 : 0;
