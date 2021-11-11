@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,6 +7,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Link from "../Link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,22 +31,57 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name: string, calories: number) {
-  return { name, calories };
+const Controls = (props: any) => {
+  const [foodId, setFoodId] = useState("1234");
+
+  return (
+    <ButtonGroup variant="contained" aria-label="outlined primary button group">
+        <Button onClick={() => {}} sx={{ backgroundColor: "Orange" }}>
+          <Link href={`/admin/edit/${foodId}`}>
+            Edit
+          </Link>
+        </Button>
+      <Button sx={{ backgroundColor: "Orange" }}>Delete</Button>
+    </ButtonGroup>
+  );
 }
 
-const rows = [
-  createData("Frozen yoghurt", 159),
-];
+interface FoodRow {
+  name: string,
+  calories: number,
+  date?: string,
+}
+interface TableProps {
+  rows?: FoodRow[],
+  headers: string[],
+  admin?: boolean,
+}
 
-export default function CustomizedTables() {
+var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function createData(name: string, calories: number) {
+  const date = new Date();
+  return { name, calories, date: `${days[date.getDay()]}, ${months[date.getMonth()]}, ${date.getFullYear()}` };
+}
+
+export default function CustomizedTables(props: TableProps) {
+  const [rows, setRows] = useState([
+    createData("Frozen yoghurt", 159),
+    createData("Ice cream sandwich", 237),
+    createData("Eclair", 262),
+    createData("Cupcake", 305),
+    createData("Gingerbread", 356),
+  ] as FoodRow[]);
+
   return (
     <TableContainer sx={{ minWidth: "65%", maxWidth: 300 }} component={Paper}>
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
+            {props.headers.map((name, index) => (
+              <StyledTableCell key={index} align="center">{ name }</StyledTableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,7 +90,9 @@ export default function CustomizedTables() {
               <StyledTableCell component="th" scope="row">
                 {row.name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
+              <StyledTableCell align="center">{row.calories}</StyledTableCell>
+              {row.date? <StyledTableCell align="center">{row.date}</StyledTableCell> : null }
+              {props.admin? <StyledTableCell align="center"><Controls /></StyledTableCell> : null }
             </StyledTableRow>
           ))}
         </TableBody>

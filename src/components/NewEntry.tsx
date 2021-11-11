@@ -5,10 +5,9 @@ import { Button } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box } from "@mui/system";
 import DatePicker from "./DatePicker";
-import Table from "./Table";
 import { useState } from "react";
 
-export default function NewEntry() {
+export default function NewEntry(props: any) {
   const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
   const [foodName, setFoodName] = useState("");
   const [foodOption, setFoodOption] = useState(null);
@@ -56,9 +55,8 @@ export default function NewEntry() {
           handleAddFoodEntry(foodName, calorieCount);
         }}
       >
-        <AddBoxIcon /> &nbsp; Add Food Entry
+        <AddBoxIcon /> &nbsp; {props.foodId? "Edit" : "Add"} Food Entry
       </Button>
-      <Table entry={newEntry}></Table>
     </Box>
   );
 }

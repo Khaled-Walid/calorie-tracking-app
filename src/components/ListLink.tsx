@@ -3,7 +3,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Link from "../Link";
 
-const ListLink = (props) => {
+const ListLink = (props: any) => {
   return (
     <Link href={props.href}>
       <ListItem button>

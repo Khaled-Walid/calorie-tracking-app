@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import { Autocomplete, TextField } from "@mui/material";
-import Layout from "../src/components/Layout";
+import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
 import { useState } from "react";
+import Table from '../../src/components/Table';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -125,6 +126,8 @@ const Admin: NextPage = () => {
               <TextField {...params} label="User" />
             )}
           />
+
+          <Table headers={["Food Name", "Calories", "Date", "Controls"]} admin={true}></Table>
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
           <h1>Item Two</h1>
