@@ -17,6 +17,7 @@ import Link from "../Link";
 import ListLink from "./ListLink";
 import { useQuery } from "react-query";
 import { getUserRoles } from "../clientApi/user/roles";
+import { useSession } from 'next-auth/client';
 
 const drawerWidth = 240;
 
@@ -31,6 +32,8 @@ export default function Nav(props: Props) {
 
   const { data: roles } = useQuery('userroles', getUserRoles);
   const isAdmin = roles && roles.some(role => role === 'ADMIN');
+
+  const [session] = useSession();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -91,16 +94,11 @@ export default function Nav(props: Props) {
             Calorie Counter
           </Typography>
           <Box sx={{ position: "absolute", right: "20px" }}>
-            <Link href={"/"}>
-              <Button variant="text" sx={{ color: "white" }}>
-                Login
-              </Button>
-            </Link>
-            <Link href={"/"}>
-              <Button variant="contained" sx={{ backgroundColor: "Orange" }}>
-                Signup
-              </Button>
-            </Link>
+            {session && session.user && (
+              <Typography variant="h6" noWrap component="div">
+                Hello, {session.user.name}
+              </Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
