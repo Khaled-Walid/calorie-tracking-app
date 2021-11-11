@@ -64,6 +64,9 @@ export default function NewEntry(props: any) {
         }}
         onClick={() => {
           props.handleAddFoodEntry(foodName, calorieCount, dateValue);
+          setFoodName('');
+          setFoodOption(null);
+          setCalorieCount('');
         }}
       >
         <AddBoxIcon /> &nbsp; {props.foodId? "Edit" : "Add"} Food Entry
