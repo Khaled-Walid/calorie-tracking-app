@@ -36,3 +36,8 @@ export const updateFoodById = (id: string, food: Food) => fetchApiNoResponse(`${
 export const deleteFoodById = (id: string) => fetchApiNoResponse(`${baseUrl}/${id}`, {
   method: 'DELETE',
 });
+
+export const countFoodEntries = (startDate: Date, endDate: Date) => fetchApi<number>(baseUrl + '/count?' + new URLSearchParams({
+  startDate: startDate.toISOString(),
+  endDate: endDate.toISOString(),
+}));

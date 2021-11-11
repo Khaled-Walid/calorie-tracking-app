@@ -1,5 +1,6 @@
 import { Role, UserPermission } from '.prisma/client';
 import prismaClient from '../../prisma/client';
+import InputError from '../utils/errors/InputError';
 
 export type User = {
   id?: string;
@@ -24,6 +25,65 @@ export async function findUsers(): Promise<User[]> {
     name: u.name ?? undefined,
     email: u.email,
   }));
+}
+
+export async function getUserRoles(userId: string): Promise<string[]> {
+  const user = await prismaClient.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      account: {
+        include: {
+          permissions: true,
+        },
+      },
+    },
+  });
+
+  if (!user || !user.account) {
+    throw new InputError();
+  }
+
+  return user.account.permissions.map(perm => perm.role.toString());
+}
+
+export async function getUserAverageCalories(userId: string, startDate: Date, endDate: Date): Promise<number> {
+  const foodAggregate = await prismaClient.consumedFood.aggregate({
+    _avg: {
+      calories: true,
+    },
+    where: {
+      userId,
+      consumedAt: {
+        gte: startDate,
+        lt: endDate,
+      }
+    }
+  });
+
+  if (!foodAggregate || foodAggregate._avg.calories === null) {
+    throw new InputError();
+  }
+
+  return foodAggregate._avg.calories;
+}
+
+export async function getUserCalorieLimit(userId: string): Promise<number> {
+  const user = await prismaClient.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      account: true,
+    },
+  });
+
+  if (!user || !user.account) {
+    throw new InputError();
+  }
+
+  return user.account.calorieLimit;
 }
 
 export async function createUser(user: User, password: string) {

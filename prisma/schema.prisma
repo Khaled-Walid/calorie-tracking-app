@@ -25,6 +25,7 @@ model UserAccount {
   userId          String
   password        String
   permissions     UserPermission[]
+  calorieLimit    Float             @default(2100)
 }
 
 model UserPermission {

@@ -1,6 +1,7 @@
 import { Prisma } from '.prisma/client';
 import prismaClient from '../../prisma/client';
 import AuthorizationError from '../utils/errors/AuthorizationError';
+import InputError from '../utils/errors/InputError';
 
 export type Food = {
   id?: string;
@@ -102,4 +103,24 @@ export async function deleteFood(foodId: string, userId?: string): Promise<void>
       id: foodId,
     },
   });
+}
+
+export async function countFoodEntries(startDate: Date, endDate: Date): Promise<number> {
+  const aggregate = await prismaClient.consumedFood.aggregate({
+    _count: {
+      id: true,
+    },
+    where: {
+      consumedAt: {
+        gte: startDate,
+        lt: endDate,
+      }
+    }
+  });
+
+  if (!aggregate || aggregate._count.id === null) {
+    throw new InputError();
+  }
+
+  return aggregate._count.id;
 }
