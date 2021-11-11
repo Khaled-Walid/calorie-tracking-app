@@ -7,6 +7,9 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../src/theme';
 import createEmotionCache from '../src/createEmotionCache';
 import Cookies from 'cookies';
+import { Provider as SessionProvider } from 'next-auth/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 const sessionTokenCookie = {
   name: 'next-auth.session-token',
 
@@ -26,6 +29,8 @@ const sessionTokenCookie = {
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
+const queryClient = new QueryClient();
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
@@ -34,16 +39,20 @@ function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <CacheProvider value={emotionCache}>
-      <Head>
-        <title>Calorie Counter</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Head>
+            <title>Calorie Counter</title>
+            <meta name="viewport" content="initial-scale=1, width=device-width" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SessionProvider>
     </CacheProvider>
   );
 }
