@@ -3,7 +3,7 @@ import styles from "../../styles/Home.module.css";
 import { Autocomplete, TextField } from "@mui/material";
 import Layout from "../../src/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Table, { FoodRow, createData } from '../../src/components/Table';
 
 interface TabPanelProps {
@@ -26,6 +26,10 @@ interface User {
           };
       };
   };
+}
+
+interface UserFoodData {
+  [key: string]: FoodRow[]
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -91,6 +95,32 @@ const Admin: NextPage = () => {
 
   const [activeTab, setActivetab] = useState(0);
   const [selectedUser, setSelectedUser] = useState(mockUsersOptions[0] as User | null);
+  const [foodItems, setfoodItems] = useState([] as FoodRow[]);
+
+  useEffect(() => {
+    const mockFoodItems: UserFoodData = {
+      "ckvtcy4e80029jqus9m2xy61t": [
+        createData("Frozen yoghurt", 159),
+        createData("Ice cream sandwich", 237),
+        createData("Eclair", 262),
+        createData("Cupcake", 305),
+        createData("Gingerbread", 356),
+      ],
+      "ckvtcy4e30014jqus0gk4koe4": [
+        createData("item 1", 520),
+        createData("item 2", 521),
+        createData("item 3", 522),
+        createData("item 4", 523),
+        createData("item 5", 524),
+      ]
+    };
+
+    if (selectedUser?.id) {
+      setfoodItems(mockFoodItems[selectedUser.id]);
+    } else {
+      setfoodItems([]);
+    }
+  }, [selectedUser]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActivetab(newValue);
@@ -130,15 +160,7 @@ const Admin: NextPage = () => {
           <Table 
             headers={["Food Name", "Calories", "Date", "Controls"]}
             admin={true}
-            rows={
-              [
-                createData("Frozen yoghurt", 159),
-                createData("Ice cream sandwich", 237),
-                createData("Eclair", 262),
-                createData("Cupcake", 305),
-                createData("Gingerbread", 356),
-              ] as FoodRow[]
-            }
+            rows={foodItems}
           />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
